@@ -1,0 +1,1065 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Seguimiento ADSO — Guías 1 a 5</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root, :root[data-theme="dark"] {
+  --bg: #0b1020;
+  --bg-2: #0f1529;
+  --card: #141b31;
+  --card-2: #182039;
+  --border: rgba(148,163,209,0.14);
+  --text: #e8ecf8;
+  --dim: #9aa4c2;
+  --dimmer: #6b7594;
+  --accent: #8b5cf6;
+  --accent-2: #6366f1;
+  --green: #34d399;
+  --green-bg: rgba(52,211,153,0.13);
+  --amber: #fbbf24;
+  --amber-bg: rgba(251,191,36,0.13);
+  --red: #f87171;
+  --red-bg: rgba(248,113,113,0.13);
+  --blue: #818cf8;
+  --empty-bg: rgba(148,163,209,0.08);
+  --sena: #39a900;
+  --track: rgba(148,163,209,0.15);
+  --shadow: 0 10px 30px rgba(0,0,0,0.35);
+}
+:root[data-theme="light"] {
+  --bg: #f3f5fb;
+  --bg-2: #ffffff;
+  --card: #ffffff;
+  --card-2: #f7f8fc;
+  --border: #e3e7f2;
+  --text: #141a2e;
+  --dim: #5b6480;
+  --dimmer: #8b93ab;
+  --accent: #7c3aed;
+  --accent-2: #4f46e5;
+  --green: #059669;
+  --green-bg: #d1fae5;
+  --amber: #b45309;
+  --amber-bg: #fef3c7;
+  --red: #dc2626;
+  --red-bg: #fee2e2;
+  --blue: #4f46e5;
+  --empty-bg: #eef1f7;
+  --track: #e6e9f2;
+  --shadow: 0 6px 20px rgba(20,26,46,0.06);
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+body { font-family:'Plus Jakarta Sans', sans-serif; background:var(--bg); color:var(--text); transition:background .25s, color .25s; }
+.mono { font-family:'JetBrains Mono', monospace; }
+
+/* TOPBAR */
+.topbar {
+  position:sticky; top:0; z-index:20;
+  display:flex; align-items:center; gap:14px; flex-wrap:wrap;
+  padding:10px 22px;
+  background:linear-gradient(90deg, #0f3d1a, #14213d 60%);
+  color:#fff; font-size:.85rem;
+}
+:root[data-theme="light"] .topbar { background:linear-gradient(90deg, #2d8400, #39a900 60%, #4f46e5); }
+.sena-tag { background:var(--sena); color:#fff; font-weight:800; padding:4px 10px; border-radius:6px; font-size:.75rem; letter-spacing:.5px; }
+.topbar .info { font-weight:600; opacity:.95; }
+.topbar .dot { opacity:.5; }
+.topbar .corte { margin-left:auto; display:flex; align-items:center; gap:7px; padding:5px 12px; border-radius:999px; background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.18); font-size:.78rem; font-weight:600; }
+.topbar .corte::before { content:''; width:7px; height:7px; border-radius:50%; background:#4ade80; box-shadow:0 0 8px #4ade80; }
+
+/* LAYOUT */
+.layout { display:grid; grid-template-columns:250px 1fr; min-height:calc(100vh - 44px); }
+.sidebar {
+  background:var(--bg-2); border-right:1px solid var(--border);
+  padding:22px 16px; display:flex; flex-direction:column; gap:22px;
+  position:sticky; top:44px; height:calc(100vh - 44px);
+}
+.brand { display:flex; gap:12px; align-items:center; padding:0 6px 20px; border-bottom:1px solid var(--border); }
+.brand-icon { width:42px; height:42px; border-radius:12px; background:linear-gradient(135deg, var(--accent), var(--accent-2)); display:grid; place-items:center; color:#fff; flex-shrink:0; }
+.brand-title { font-weight:800; font-size:1.05rem; }
+.brand-title span { color:var(--accent); }
+.brand-sub { font-size:.66rem; color:var(--dim); letter-spacing:.8px; text-transform:uppercase; margin-top:2px; font-weight:600; }
+.nav { display:flex; flex-direction:column; gap:6px; }
+.nav button {
+  display:flex; align-items:center; gap:12px; width:100%;
+  padding:12px 14px; border-radius:12px; border:1px solid transparent;
+  background:none; color:var(--dim); font:600 .9rem 'Plus Jakarta Sans',sans-serif; cursor:pointer; text-align:left;
+  transition:all .2s;
+}
+.nav button:hover { background:var(--card); color:var(--text); }
+.nav button.active { background:linear-gradient(135deg, var(--accent), var(--accent-2)); color:#fff; box-shadow:0 8px 20px rgba(139,92,246,.35); }
+.nav .count { margin-left:auto; font-size:.72rem; padding:2px 8px; border-radius:999px; background:var(--card-2); color:var(--dim); }
+.nav button.active .count { background:rgba(255,255,255,.22); color:#fff; }
+.theme-toggle { margin-top:auto; display:grid; grid-template-columns:1fr 1fr; gap:4px; padding:4px; border-radius:14px; background:var(--card); border:1px solid var(--border); }
+.theme-toggle button { padding:9px; border-radius:10px; border:none; background:none; color:var(--dim); font:600 .82rem 'Plus Jakarta Sans',sans-serif; cursor:pointer; }
+.theme-toggle button.on { background:var(--bg); color:var(--text); box-shadow:var(--shadow); }
+
+.main { padding:28px 32px 40px; min-width:0; }
+.view { display:none; animation:fade .3s ease; }
+.view.active { display:block; }
+@keyframes fade { from{opacity:0; transform:translateY(6px)} to{opacity:1; transform:none} }
+
+.card { background:var(--card); border:1px solid var(--border); border-radius:20px; box-shadow:var(--shadow); }
+
+/* HERO */
+.hero { display:grid; grid-template-columns:auto 1fr; gap:36px; align-items:center; padding:32px 36px; margin-bottom:22px; background:radial-gradient(circle at 0% 0%, rgba(139,92,246,.14), transparent 50%), var(--card); }
+.rings { display:flex; gap:22px; }
+.ring { position:relative; width:118px; height:118px; }
+.ring svg { transform:rotate(-90deg); }
+.ring .lbl { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+.ring .lbl b { font-size:1.55rem; font-weight:800; }
+.ring .lbl small { font-size:.62rem; color:var(--dim); letter-spacing:1px; font-weight:700; text-transform:uppercase; margin-top:2px; }
+.pill-tag { display:inline-flex; align-items:center; gap:8px; padding:6px 14px; border-radius:999px; background:rgba(139,92,246,.12); border:1px solid rgba(139,92,246,.35); color:var(--accent); font-size:.72rem; font-weight:700; letter-spacing:.8px; text-transform:uppercase; }
+.hero h1 { font-size:1.85rem; font-weight:800; margin:12px 0 10px; line-height:1.15; letter-spacing:-.5px; }
+.hero p { color:var(--dim); line-height:1.6; font-size:.92rem; max-width:620px; }
+.hero p b { color:var(--text); }
+
+/* KPIs */
+.kpis { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin-bottom:34px; }
+.kpi { padding:20px; }
+.kpi-icon { width:40px; height:40px; border-radius:11px; display:grid; place-items:center; margin-bottom:14px; }
+.kpi-lbl { font-size:.7rem; letter-spacing:1px; text-transform:uppercase; color:var(--dim); font-weight:700; }
+.kpi-val { font-size:1.9rem; font-weight:800; margin:6px 0 4px; }
+.kpi-sub { font-size:.8rem; color:var(--dim); line-height:1.4; }
+.kpi-sub b { color:var(--text); }
+
+/* SECTION HEAD */
+.sec-head { display:flex; align-items:center; gap:10px; margin-bottom:6px; }
+.sec-head h2 { font-size:1.3rem; font-weight:800; letter-spacing:-.3px; }
+.sec-head svg { color:var(--accent); }
+.sec-desc { color:var(--dim); font-size:.85rem; margin-bottom:16px; }
+.filters { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:18px; }
+.filters button { padding:7px 16px; border-radius:999px; border:1px solid var(--border); background:var(--card); color:var(--dim); font:600 .82rem 'Plus Jakarta Sans',sans-serif; cursor:pointer; transition:all .2s; }
+.filters button:hover { color:var(--text); }
+.filters button.active { background:linear-gradient(135deg, var(--accent), var(--accent-2)); color:#fff; border-color:transparent; }
+
+/* COMPARE CARDS */
+.comp-list { display:flex; flex-direction:column; gap:14px; }
+.comp { padding:18px 20px; }
+.comp-top { display:flex; align-items:center; gap:12px; margin-bottom:14px; flex-wrap:wrap; }
+.code { font-family:'JetBrains Mono',monospace; font-size:.72rem; padding:4px 9px; border-radius:7px; background:rgba(99,102,241,.14); color:var(--blue); border:1px solid rgba(99,102,241,.3); font-weight:700; }
+.comp-title { font-weight:700; font-size:1rem; }
+.guide-chip { margin-left:auto; font-size:.72rem; padding:4px 10px; border-radius:8px; background:var(--card-2); color:var(--dim); border:1px solid var(--border); font-weight:600; }
+.comp-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+.metric { background:var(--card-2); border:1px solid var(--border); border-radius:14px; padding:13px 15px; }
+.metric-top { display:flex; justify-content:space-between; align-items:center; font-size:.82rem; font-weight:600; margin-bottom:9px; }
+.metric-top .pct { font-family:'JetBrains Mono',monospace; font-weight:700; }
+.bar { height:7px; border-radius:99px; background:var(--track); overflow:hidden; }
+.bar > i { display:block; height:100%; border-radius:99px; transition:width .8s cubic-bezier(.2,.8,.2,1); }
+.metric-bot { display:flex; justify-content:space-between; margin-top:9px; font-size:.75rem; color:var(--dim); }
+.link-btn { background:none; border:none; color:var(--dim); font:600 .75rem 'Plus Jakarta Sans',sans-serif; cursor:pointer; }
+.link-btn:hover { color:var(--accent); }
+.act-rows { margin-top:14px; display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:10px; }
+.act-row { background:var(--card-2); border:1px solid var(--border); border-radius:12px; padding:10px 12px; font-size:.78rem; }
+.act-row .t { display:flex; justify-content:space-between; gap:8px; margin-bottom:7px; }
+.act-row .t span:first-child { color:var(--dim); }
+.act-row .t b { font-family:'JetBrains Mono',monospace; }
+
+/* TABLE */
+.table-head { display:flex; justify-content:space-between; align-items:flex-start; gap:16px; flex-wrap:wrap; margin-bottom:16px; }
+.search { position:relative; }
+.search input { width:260px; padding:10px 14px 10px 38px; border-radius:12px; border:1px solid var(--border); background:var(--card); color:var(--text); font:500 .88rem 'Plus Jakarta Sans',sans-serif; outline:none; }
+.search input:focus { border-color:var(--accent); }
+.search svg { position:absolute; left:12px; top:50%; transform:translateY(-50%); color:var(--dim); }
+.table-wrap { overflow-x:auto; border-radius:20px; }
+table { width:100%; border-collapse:collapse; font-size:.86rem; }
+thead th { text-align:left; font-size:.7rem; letter-spacing:1px; text-transform:uppercase; color:var(--dim); padding:14px 14px; font-weight:700; border-bottom:1px solid var(--border); white-space:nowrap; }
+tbody td { padding:11px 14px; border-bottom:1px solid var(--border); white-space:nowrap; }
+tbody tr:last-child td { border-bottom:none; }
+#tablaAprendices tbody tr { cursor:pointer; transition:background .15s; }
+#tablaAprendices tbody tr:hover { background:var(--card-2); }
+.who { display:flex; align-items:center; gap:12px; font-weight:700; }
+.avatar { width:34px; height:34px; border-radius:50%; display:grid; place-items:center; font-size:.72rem; font-weight:800; color:#fff; background:linear-gradient(135deg, var(--accent), var(--accent-2)); flex-shrink:0; }
+.pct-cell { font-family:'JetBrains Mono',monospace; font-weight:700; font-size:.82rem; }
+.mini { display:flex; gap:4px; }
+.mini i { width:22px; height:6px; border-radius:3px; background:var(--track); position:relative; overflow:hidden; }
+.mini i::after { content:''; position:absolute; inset:0; width:var(--w); background:var(--c); }
+.status { display:inline-flex; align-items:center; gap:6px; padding:5px 11px; border-radius:999px; font-size:.75rem; font-weight:700; }
+.st-ok { background:var(--green-bg); color:var(--green); }
+.st-good { background:rgba(99,102,241,.14); color:var(--blue); }
+.st-prog { background:var(--amber-bg); color:var(--amber); }
+.st-bad { background:var(--red-bg); color:var(--red); }
+.st-ok::before,.st-good::before,.st-prog::before,.st-bad::before { content:''; width:6px; height:6px; border-radius:50%; background:currentColor; }
+
+/* MATRIZ */
+.matrix th, .matrix td { text-align:center; padding:8px 7px; font-size:.75rem; }
+.matrix td:first-child, .matrix thead tr:first-child th:first-child { text-align:left; position:sticky; left:0; background:var(--card); z-index:2; min-width:210px; }
+.matrix thead tr:first-child th:first-child { color:var(--dim); text-transform:uppercase; letter-spacing:1px; }
+.matrix thead tr:first-child th { color:#fff; font-size:.72rem; letter-spacing:.3px; text-transform:none; }
+.matrix .act-h { font-size:.62rem; letter-spacing:0; text-transform:none; white-space:normal; min-width:62px; line-height:1.25; color:var(--dim); }
+.g1h{background:#2d7d00 !important} .g2h{background:#1a5c00 !important} .g3h{background:#0f6e6e !important} .g4h{background:#7a3d00 !important} .g5h{background:#5b2a86 !important}
+.badge { font-style:normal; display:inline-flex; align-items:center; justify-content:center; width:24px; height:24px; border-radius:7px; font-weight:800; font-size:.72rem; }
+.b-A { background:var(--green-bg); color:var(--green); }
+.b-D { background:var(--amber-bg); color:var(--amber); }
+.b-E { background:var(--empty-bg); color:var(--dimmer); }
+.legend { display:flex; gap:16px; flex-wrap:wrap; font-size:.8rem; color:var(--dim); margin-bottom:14px; }
+.legend span { display:flex; align-items:center; gap:6px; }
+
+/* MODAL */
+.modal-bg { position:fixed; inset:0; background:rgba(5,8,18,.65); backdrop-filter:blur(4px); z-index:50; display:none; align-items:flex-start; justify-content:center; padding:40px 16px; overflow-y:auto; }
+.modal-bg.open { display:flex; }
+.modal { width:100%; max-width:900px; padding:26px 28px; animation:fade .25s ease; }
+.modal-head { display:flex; gap:16px; align-items:center; margin-bottom:20px; }
+.modal-head .avatar { width:52px; height:52px; font-size:1rem; }
+.modal-head h3 { font-size:1.25rem; font-weight:800; }
+.modal-head p { color:var(--dim); font-size:.84rem; margin-top:3px; }
+.close { margin-left:auto; width:38px; height:38px; border-radius:11px; border:1px solid var(--border); background:var(--card-2); color:var(--text); cursor:pointer; font-size:1.1rem; flex-shrink:0; }
+.modal-kpis { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-bottom:20px; }
+.modal-kpis div { background:var(--card-2); border:1px solid var(--border); border-radius:14px; padding:12px 14px; }
+.modal-kpis small { font-size:.68rem; color:var(--dim); letter-spacing:.8px; text-transform:uppercase; font-weight:700; }
+.modal-kpis b { display:block; font-size:1.4rem; font-weight:800; margin-top:3px; }
+.guide-block { border:1px solid var(--border); border-radius:14px; margin-bottom:10px; overflow:hidden; }
+.guide-block summary { list-style:none; cursor:pointer; padding:13px 16px; display:flex; align-items:center; gap:12px; background:var(--card-2); font-weight:700; font-size:.9rem; }
+.guide-block summary::-webkit-details-marker { display:none; }
+.guide-block summary .bar { flex:1; max-width:220px; margin-left:auto; }
+.guide-block summary .pct-cell { width:46px; text-align:right; }
+.gdot { width:10px; height:10px; border-radius:3px; flex-shrink:0; }
+.act-list { padding:6px 16px 12px; }
+.act-item { display:flex; align-items:center; gap:12px; padding:8px 0; border-bottom:1px dashed var(--border); font-size:.82rem; }
+.act-item:last-child { border-bottom:none; }
+.act-item .code { font-size:.65rem; padding:3px 7px; flex-shrink:0; }
+.act-item .nm { color:var(--dim); flex:1; line-height:1.35; }
+
+.footer { margin-top:34px; padding-top:18px; border-top:1px solid var(--border); font-size:.78rem; color:var(--dimmer); line-height:1.6; }
+.footer b { color:var(--dim); }
+
+.empty { padding:30px; text-align:center; color:var(--dim); }
+
+/* RESPONSIVE */
+@media (max-width: 1100px) { .kpis { grid-template-columns:repeat(2,1fr); } }
+@media (max-width: 860px) {
+  .layout { grid-template-columns:1fr; }
+  .sidebar { position:static; height:auto; flex-direction:row; flex-wrap:wrap; align-items:center; padding:12px 16px; gap:12px; border-right:none; border-bottom:1px solid var(--border); }
+  .brand { border:none; padding:0; }
+  .nav { flex-direction:row; flex-wrap:wrap; width:100%; }
+  .nav button { width:auto; padding:9px 12px; font-size:.82rem; }
+  .theme-toggle { margin:0; width:100%; }
+  .main { padding:20px 16px 32px; }
+  .hero { grid-template-columns:1fr; padding:24px 20px; gap:22px; }
+  .rings { justify-content:center; }
+  .hero h1 { font-size:1.45rem; }
+  .comp-grid { grid-template-columns:1fr; }
+  .search input { width:100%; }
+  .search { width:100%; }
+  .modal { padding:20px 16px; }
+  .modal-kpis { grid-template-columns:1fr; }
+  .topbar .corte { margin-left:0; }
+}
+@media (max-width: 520px) { .kpis { grid-template-columns:1fr; } .ring { width:100px; height:100px; } .ring svg { width:100px; height:100px; } }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <span class="sena-tag">SENA</span>
+  <span class="info">Tecnología en Análisis y Desarrollo de Software</span>
+  <span class="dot">•</span>
+  <span class="info">ADSO · Zajuna</span>
+  <span class="corte">Corte actualizado (Oct 2026)</span>
+</header>
+
+<div class="layout">
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 2 7l10 5 10-5-10-5Z"/><path d="m2 17 10 5 10-5"/><path d="m2 12 10 5 10-5"/></svg>
+      </div>
+      <div>
+        <div class="brand-title">Seguimiento <span>ADSO</span></div>
+        <div class="brand-sub">Guías 1 a 5</div>
+      </div>
+    </div>
+    <nav class="nav">
+      <button class="active" data-view="resumen">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>
+        Resumen General</button>
+      <button data-view="competencias">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 4h7a3 3 0 0 1 3 3v13a2 2 0 0 0-2-2H2z"/><path d="M22 4h-7a3 3 0 0 0-3 3v13a2 2 0 0 1 2-2h8z"/></svg>
+        Competencias <span class="count" id="cntComp">0</span></button>
+      <button data-view="aprendices">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        Aprendices Activos <span class="count" id="cntApr">0</span></button>
+      <button data-view="matriz">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18M9 3v18M15 3v18"/></svg>
+        Matriz de Notas <span class="count" id="cntAct">0</span></button>
+    </nav>
+    <div class="theme-toggle">
+      <button id="btnDark" class="on">☾ Dark</button>
+      <button id="btnLight">☀ Light</button>
+    </div>
+  </aside>
+
+  <main class="main">
+
+    <!-- ============ RESUMEN ============ -->
+    <section class="view active" id="view-resumen">
+      <div class="card hero">
+        <div class="rings">
+          <div class="ring" id="ringA"></div>
+          <div class="ring" id="ringE"></div>
+        </div>
+        <div>
+          <span class="pill-tag">✦ Construcción de Software · Guías 1 a 5</span>
+          <h1>Estado de Avance de las Guías 1 a 5</h1>
+          <p>Reúne las evidencias calificadas en <b>LMS Zajuna</b> para las <b>Guías 1 a 5</b> de las competencias técnicas. Selecciona una guía para ver el detalle por actividad, o un aprendiz para consultar su expediente individual.</p>
+        </div>
+      </div>
+
+      <div class="kpis">
+        <div class="card kpi">
+          <div class="kpi-icon" style="background:var(--green-bg);color:var(--green)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="m9 15 2 2 4-4"/></svg></div>
+          <div class="kpi-lbl">Evidencias aprobadas</div>
+          <div class="kpi-val" style="color:var(--green)" id="kA">0%</div>
+          <div class="kpi-sub" id="kAsub"></div>
+        </div>
+        <div class="card kpi">
+          <div class="kpi-icon" style="background:var(--amber-bg);color:var(--amber)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></div>
+          <div class="kpi-lbl">En desarrollo (D)</div>
+          <div class="kpi-val" style="color:var(--amber)" id="kD">0</div>
+          <div class="kpi-sub">evidencias por <b>corregir</b> y reenviar</div>
+        </div>
+        <div class="card kpi">
+          <div class="kpi-icon" style="background:rgba(99,102,241,.14);color:var(--blue)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="6"/><path d="M15.48 12.89 17 22l-5-3-5 3 1.52-9.11"/></svg></div>
+          <div class="kpi-lbl">Aprendices al 100%</div>
+          <div class="kpi-val" id="kFull">0</div>
+          <div class="kpi-sub" id="kFullSub"></div>
+        </div>
+        <div class="card kpi">
+          <div class="kpi-icon" style="background:var(--red-bg);color:var(--red)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4M12 17h.01"/></svg></div>
+          <div class="kpi-lbl">Mayor atraso</div>
+          <div class="kpi-val" style="color:var(--red)" id="kLow">0%</div>
+          <div class="kpi-sub" id="kLowSub"></div>
+        </div>
+      </div>
+
+      <div class="sec-head">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M3 3v18h18"/><path d="M7 16v-4M12 16V8M17 16v-7"/></svg>
+        <h2>Comparativa por Guía</h2>
+      </div>
+      <p class="sec-desc">Porcentaje de evidencias aprobadas y entregadas sobre el total esperado de cada guía.</p>
+      <div class="filters" id="filtroGuias"></div>
+      <div class="comp-list" id="compGuias"></div>
+    </section>
+
+    <!-- ============ COMPETENCIAS ============ -->
+    <section class="view" id="view-competencias">
+      <div class="sec-head">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M2 4h7a3 3 0 0 1 3 3v13a2 2 0 0 0-2-2H2z"/><path d="M22 4h-7a3 3 0 0 0-3 3v13a2 2 0 0 1 2-2h8z"/></svg>
+        <h2>Competencias</h2>
+      </div>
+      <p class="sec-desc">Avance por competencia técnica, sumando todas las guías en las que se evalúa.</p>
+      <div class="filters" id="filtroComp"></div>
+      <div class="comp-list" id="compList"></div>
+    </section>
+
+    <!-- ============ APRENDICES ============ -->
+    <section class="view" id="view-aprendices">
+      <div class="table-head">
+        <div>
+          <div class="sec-head">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M19 8v6M22 11h-6"/></svg>
+            <h2>Aprendices Activos (<span id="nApr">0</span>)</h2>
+          </div>
+          <p class="sec-desc" style="margin:0">Haz clic en cualquier fila para abrir el expediente individual con sus 5 guías.</p>
+        </div>
+        <div class="search">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+          <input type="text" id="buscador" placeholder="Buscar aprendiz...">
+        </div>
+      </div>
+      <div class="card table-wrap">
+        <table id="tablaAprendices">
+          <thead><tr><th>#</th><th>Aprendiz</th><th>Guías 1–5</th><th>Aprobado</th><th>Entregado</th><th>D</th><th>Estado</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ============ MATRIZ ============ -->
+    <section class="view" id="view-matriz">
+      <div class="table-head">
+        <div>
+          <div class="sec-head">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18M9 3v18M15 3v18"/></svg>
+            <h2>Matriz de Notas</h2>
+          </div>
+          <p class="sec-desc" style="margin:0">Todas las evidencias de las Guías 1 a 5 por aprendiz.</p>
+        </div>
+        <div class="search">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+          <input type="text" id="buscadorMatriz" placeholder="Buscar aprendiz...">
+        </div>
+      </div>
+      <div class="legend">
+        <span><i class="badge b-A">A</i> Aprobado</span>
+        <span><i class="badge b-D">D</i> En desarrollo</span>
+        <span><i class="badge b-E">—</i> Sin entregar</span>
+      </div>
+      <div class="card table-wrap">
+        <table class="matrix" id="tablaMatriz"><thead></thead><tbody></tbody></table>
+      </div>
+    </section>
+
+    <div class="footer">
+      <b>Fuente:</b> Reporte de calificaciones LMS Zajuna (calificaciones.ods) · Corte Oct 2026.<br>
+      Cubre las evidencias de las Guías 1 a 5 (competencias 220501092, 220501093 y 220501095). Solo se listan aprendices con al menos una evidencia calificada.
+    </div>
+  </main>
+</div>
+
+<!-- MODAL EXPEDIENTE -->
+<div class="modal-bg" id="modalBg">
+  <div class="card modal" id="modal"></div>
+</div>
+
+<script>
+/* ================= DATOS ================= */
+const GUIAS = [
+  { id:1, nombre:"Requisitos de Software", color:"#22c55e" },
+  { id:2, nombre:"Evaluación de Requisitos", color:"#14b8a6" },
+  { id:3, nombre:"Lógica y Programación", color:"#38bdf8" },
+  { id:4, nombre:"Diseño y Arquitectura de Software", color:"#f59e0b" },
+  { id:5, nombre:"Prototipo e Interfaces de Usuario", color:"#a855f7" }
+];
+const COMPETENCIAS = [
+  { code:"220501092", nombre:"Establecer requisitos de la solución de software", guias:"Guía 1" },
+  { code:"220501093", nombre:"Evaluar requisitos y desarrollar algoritmos", guias:"Guías 1, 2 y 3" },
+  { code:"220501095", nombre:"Diseñar la solución de software", guias:"Guías 4 y 5" }
+];
+const ACTIVIDADES = [
+{
+"g": 1,
+"c": "220501092",
+"ev": "AA1-EV01",
+"corto": "Infografía TGS",
+"nombre": "Infografía sobre la teoría general de sistemas"
+},
+{
+"g": 1,
+"c": "220501092",
+"ev": "AA1-EV02",
+"corto": "Procesos Org.",
+"nombre": "Identificación de procesos organizacionales"
+},
+{
+"g": 1,
+"c": "220501092",
+"ev": "AA1-EV03",
+"corto": "Mapa Procesos",
+"nombre": "Mapa de procesos del software a construir"
+},
+{
+"g": 1,
+"c": "220501092",
+"ev": "AA2-EV01",
+"corto": "Mapa Requisitos",
+"nombre": "Mapa mental sobre ingeniería de requisitos"
+},
+{
+"g": 1,
+"c": "220501092",
+"ev": "AA2-EV02",
+"corto": "Foro Fuentes",
+"nombre": "Foro temático - Fuentes de requisitos"
+},
+{
+"g": 1,
+"c": "220501092",
+"ev": "AA3-EV01",
+"corto": "Instrumento",
+"nombre": "Diseño del instrumento de recolección de información"
+},
+{
+"g": 1,
+"c": "220501092",
+"ev": "AA3-EV02",
+"corto": "Formulación",
+"nombre": "Formulación del proyecto de software"
+},
+{
+"g": 1,
+"c": "220501092",
+"ev": "AA3-EV03",
+"corto": "Formulario",
+"nombre": "Formulario de recolección de información"
+},
+{
+"g": 1,
+"c": "220501092",
+"ev": "AA4-EV01",
+"corto": "Req. Funcionales",
+"nombre": "Especificación de los requerimientos funcionales y no funcionales del software"
+},
+{
+"g": 1,
+"c": "220501092",
+"ev": "AA4-EV02",
+"corto": "Doc. Requisitos",
+"nombre": "Documento con especificación de requerimientos"
+},
+{
+"g": 1,
+"c": "220501092",
+"ev": "AA5-EV01",
+"corto": "Especif. Func.",
+"nombre": "Determinación de las especificaciones funcionales del software y metodología a utilizar"
+},
+{
+"g": 1,
+"c": "220501092",
+"ev": "AA5-EV02",
+"corto": "Informe Eval.",
+"nombre": "Informe de evaluación de los requerimientos"
+},
+{
+"g": 1,
+"c": "220501093",
+"ev": "AA1-EV01",
+"corto": "Taller Metod.",
+"nombre": "Taller. Metodologías de desarrollo de software"
+},
+{
+"g": 1,
+"c": "220501093",
+"ev": "AA1-EV02",
+"corto": "Infografía",
+"nombre": "Infografía sobre metodologías de desarrollo de software"
+},
+{
+"g": 1,
+"c": "220501093",
+"ev": "AA1-EV03",
+"corto": "Foro Metod.",
+"nombre": "Foro - Especificación de la metodología a aplicar"
+},
+{
+"g": 1,
+"c": "220501093",
+"ev": "AA1-EV04",
+"corto": "Doc. Metod.",
+"nombre": "Documento sobre la metodología para el proyecto de desarrollo de software"
+},
+{
+"g": 2,
+"c": "220501093",
+"ev": "AA1-EV01",
+"corto": "Foro UML",
+"nombre": "Foro temático - Lenguaje Unificado de Modelado (UML)"
+},
+{
+"g": 2,
+"c": "220501093",
+"ev": "AA1-EV02",
+"corto": "Diagramas CU",
+"nombre": "Elaboración de diagramas y plantillas para casos de uso del proyecto"
+},
+{
+"g": 2,
+"c": "220501093",
+"ev": "AA1-EV03",
+"corto": "Hist. Usuario",
+"nombre": "Elaboración de historias de usuario del proyecto"
+},
+{
+"g": 2,
+"c": "220501093",
+"ev": "AA1-EV04",
+"corto": "Diag. Activ.",
+"nombre": "Diagramas y documentación de actividades del proyecto"
+},
+{
+"g": 2,
+"c": "220501093",
+"ev": "AA2-EV01",
+"corto": "Mod. Dominio",
+"nombre": "Elaboración de los diagramas del modelo de dominio del proyecto"
+},
+{
+"g": 2,
+"c": "220501093",
+"ev": "AA3-EV01",
+"corto": "Mapa Concepto",
+"nombre": "Mapa conceptual sobre validación de documentos"
+},
+{
+"g": 2,
+"c": "220501093",
+"ev": "AA3-EV02",
+"corto": "Inf. Análisis",
+"nombre": "Elaboración del informe de análisis con listas de chequeo para la validación de artefactos"
+},
+{
+"g": 3,
+"c": "220501093",
+"ev": "AA1-EV01",
+"corto": "Bases Lógica",
+"nombre": "Bases conceptuales de lógica proposicional"
+},
+{
+"g": 3,
+"c": "220501093",
+"ev": "AA1-EV02",
+"corto": "Taller Algoritmos",
+"nombre": "Taller de resolución de problemas de algoritmos en pseudocódigo y diagramas de flujo"
+},
+{
+"g": 3,
+"c": "220501093",
+"ev": "AA2-EV01",
+"corto": "Prog. Estructurada",
+"nombre": "Fundamentos de programación estructurada y estructuras cíclicas"
+},
+{
+"g": 3,
+"c": "220501093",
+"ev": "AA2-EV02",
+"corto": "Foro Estructuras",
+"nombre": "Foro temático - Estructuras de programación"
+},
+{
+"g": 3,
+"c": "220501093",
+"ev": "AA2-EV03",
+"corto": "Taller Funciones",
+"nombre": "Taller funciones y procedimientos en la solución de algoritmos"
+},
+{
+"g": 3,
+"c": "220501093",
+"ev": "AA3-EV01",
+"corto": "Bases Almacen.",
+"nombre": "Bases teóricas de estructuras de almacenamiento en memoria"
+},
+{
+"g": 3,
+"c": "220501093",
+"ev": "AA3-EV02",
+"corto": "Resol. Almacen.",
+"nombre": "Resolución a problemas algorítmicos aplicando estructuras de almacenamiento"
+},
+{
+"g": 4,
+"c": "220501095",
+"ev": "AA1-EV01",
+"corto": "Modelo Conceptual",
+"nombre": "Diseñar el modelo conceptual y lógico, de acuerdo al caso de estudio"
+},
+{
+"g": 4,
+"c": "220501095",
+"ev": "AA1-EV02",
+"corto": "Modelo C-L Proy.",
+"nombre": "Modelo conceptual y lógico para el proyecto desarrollo de software"
+},
+{
+"g": 4,
+"c": "220501095",
+"ev": "AA2-EV01",
+"corto": "Taller POO",
+"nombre": "Taller de conceptos y principios de programación orientada a objetos"
+},
+{
+"g": 4,
+"c": "220501095",
+"ev": "AA2-EV02",
+"corto": "Inf. Entregables",
+"nombre": "Informe de entregables para el proyecto de desarrollo de software"
+},
+{
+"g": 4,
+"c": "220501095",
+"ev": "AA2-EV03",
+"corto": "UML y Patrones",
+"nombre": "Bases conceptuales acerca del lenguaje unificado de modelado y patrones de diseño"
+},
+{
+"g": 4,
+"c": "220501095",
+"ev": "AA2-EV04",
+"corto": "Diag. Clases",
+"nombre": "Diagrama de clases del proyecto de software"
+},
+{
+"g": 4,
+"c": "220501095",
+"ev": "AA2-EV05",
+"corto": "Arquitectura SW",
+"nombre": "Desarrollar la arquitectura de software, de acuerdo con el patrón de diseño seleccionado"
+},
+{
+"g": 4,
+"c": "220501095",
+"ev": "AA2-EV06",
+"corto": "Taller Arquitect.",
+"nombre": "Taller. Arquitectura de software"
+},
+{
+"g": 4,
+"c": "220501095",
+"ev": "AA3-EV01",
+"corto": "Ciclo de Vida",
+"nombre": "Mapa conceptual - Identificación y caracterización de los componentes del ciclo de vida del software"
+},
+{
+"g": 4,
+"c": "220501095",
+"ev": "AA3-EV02",
+"corto": "Foro Arquitect.",
+"nombre": "Foro - Implementar la arquitectura de software"
+},
+{
+"g": 4,
+"c": "220501095",
+"ev": "AA3-EV03",
+"corto": "Diag. Despliegue",
+"nombre": "Diagrama de despliegue para caso de estudio y proyecto de software"
+},
+{
+"g": 4,
+"c": "220501095",
+"ev": "AA4-EV01",
+"corto": "Taller Validación",
+"nombre": "Taller sobre validación de documentos"
+},
+{
+"g": 4,
+"c": "220501095",
+"ev": "AA4-EV02",
+"corto": "Instr. Verificación",
+"nombre": "Diseño de instrumentos para verificación de artefactos"
+},
+{
+"g": 4,
+"c": "220501095",
+"ev": "AA4-EV03",
+"corto": "Listas Chequeo",
+"nombre": "Listas de chequeo para validación de documentación de diseño"
+},
+{
+"g": 4,
+"c": "220501095",
+"ev": "AA4-EV04",
+"corto": "Informe Diseño",
+"nombre": "Informe de evaluación a los artefactos de diseño del software"
+},
+{
+"g": 5,
+"c": "220501095",
+"ev": "AA1-EV01",
+"corto": "Taller Prototipo",
+"nombre": "Taller sobre construcción del prototipo del software"
+},
+{
+"g": 5,
+"c": "220501095",
+"ev": "AA1-EV02",
+"corto": "Usabilidad Escrit.",
+"nombre": "Nociones de reglas de usabilidad y accesibilidad en aplicaciones independientes"
+},
+{
+"g": 5,
+"c": "220501095",
+"ev": "AA1-EV03",
+"corto": "Interfaz y Mapa",
+"nombre": "Elaboración de interfaz gráfica y mapa de navegación"
+},
+{
+"g": 5,
+"c": "220501095",
+"ev": "AA1-EV04",
+"corto": "Maquetación HTML",
+"nombre": "Maquetación de la interfaz gráfica en HTML"
+},
+{
+"g": 5,
+"c": "220501095",
+"ev": "AA1-EV05",
+"corto": "Mapa Navegación",
+"nombre": "Mapa de navegación"
+},
+{
+"g": 5,
+"c": "220501095",
+"ev": "AA1-EV06",
+"corto": "Usabilidad Móvil",
+"nombre": "Nociones de reglas de usabilidad y accesibilidad en aplicaciones independientes móviles"
+},
+{
+"g": 5,
+"c": "220501095",
+"ev": "AA1-EV07",
+"corto": "Interfaz App Móvil",
+"nombre": "Elaboración de interfaz gráfica y mapa de navegación cumpliendo con reglas de usabilidad y accesibilidad app móvil"
+},
+{
+"g": 5,
+"c": "220501095",
+"ev": "AA1-EV08",
+"corto": "Maquetación XML",
+"nombre": "Maquetación de la interfaz gráfica en XML – Android"
+}
+];
+const estudiantes = [{"nombre": "CHRISTIAN ANDRES ACEVEDO OJEDA", "notas": ["A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A"]},
+{"nombre": "EHINNER JESUS AGUIRRE PRADA", "notas": ["A", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "A", "A", "-", "-", "A", "A", "A", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-"]},
+{"nombre": "HECTOR ANDREY ALPALA ALPALA", "notas": ["-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-"]},
+{"nombre": "LOIGGY ALEJANDRO BARRERA QUINTERO", "notas": ["A", "D", "-", "-", "A", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-"]},
+{"nombre": "DARIO MATIAS BAZAN BIGERO", "notas": ["A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A"]},
+{"nombre": "JUAN SEBASTIAN BECERRA PINEDA", "notas": ["-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-"]},
+{"nombre": "MABEL BUITRAGO LANDINEZ", "notas": ["A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A"]},
+{"nombre": "JOSE JOHANNE CARDONA GOMEZ", "notas": ["-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-"]},
+{"nombre": "MAYCOL STEVEN CORZO CARDONA", "notas": ["A", "A", "A", "A", "A", "A", "A", "A", "D", "D", "D", "D", "A", "A", "A", "A", "-", "D", "D", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "-", "-", "-", "-", "-", "-", "-", "-", "-", "A", "-", "-", "-", "-", "A", "A", "A", "-", "A", "A", "A", "-"]},
+{"nombre": "ETHAN CRUZ", "notas": ["A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "D", "A", "A", "A", "A", "A", "A", "-", "A", "A", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-"]},
+{"nombre": "JONH CESAR CUEVAS MUÑOZ", "notas": ["-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-"]},
+{"nombre": "JOSE DANIEL DIAZ ARISTIZABAL", "notas": ["A", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-"]},
+{"nombre": "CAROL DAYANA DIAZ GONZALEZ", "notas": ["A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "-", "-", "A", "-"]},
+{"nombre": "YESSIKA LICETH DUQUE GIL", "notas": ["-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-"]},
+{"nombre": "LUCIANA ANDREA GALEANO BELTRAN", "notas": ["-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-"]},
+{"nombre": "JAVIER ALONSO GRANDA OSORIO", "notas": ["-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-"]},
+{"nombre": "FABIAN ANDRES HERNANDEZ GARZON", "notas": ["A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A"]},
+{"nombre": "NICOLAS HERRERA TRIANA", "notas": ["-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-"]},
+{"nombre": "GABRIELA JAIME CHAVEZ", "notas": ["A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-"]},
+{"nombre": "FAILER MIGUEL LAMBRAÑO CHADID", "notas": ["-", "-", "-", "-", "A", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-"]},
+{"nombre": "YESSIKA PAOLA LOPEZ BLANDON", "notas": ["-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-"]},
+{"nombre": "JULIANA LOPEZ SALAMANCA", "notas": ["A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "D", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "D", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A"]},
+{"nombre": "JENNY LILIANA MARTINEZ GONZALEZ", "notas": ["-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-"]},
+{"nombre": "LUIS EDUARDO MENDEZ BENITEZ", "notas": ["A", "A", "A", "A", "-", "A", "A", "A", "A", "A", "-", "-", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "-", "A", "A", "A", "A", "A", "A", "A", "A", "-", "-", "A", "A", "-", "-", "-", "-", "-", "A", "A", "A", "-", "-", "-", "-", "-"]},
+{"nombre": "JOSE ADAN MORALES DUQUE", "notas": ["A", "A", "A", "A", "A", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-"]},
+{"nombre": "KEVIN SANTIAGO MORALES ENRIQUEZ", "notas": ["A", "A", "A", "A", "A", "A", "A", "A", "A", "D", "A", "A", "A", "A", "A", "A", "A", "A", "A", "-", "-", "-", "-", "A", "A", "A", "A", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-"]},
+{"nombre": "JUAN SEBASTIAN OBANDO BEDOYA", "notas": ["A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "D", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "D", "D", "D", "A", "D", "D"]},
+{"nombre": "BRYAN JESUS PABON COBA", "notas": ["A", "A", "A", "A", "A", "A", "A", "A", "D", "D", "A", "A", "A", "A", "A", "A", "A", "D", "A", "A", "A", "A", "A", "A", "A", "-", "-", "A", "A", "A", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-"]},
+{"nombre": "SEBASTIAN PALACIOS PORTILLA", "notas": ["A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "-"]},
+{"nombre": "KEINER ALEXANDER PAUTT VASQUEZ", "notas": ["A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-"]},
+{"nombre": "YERI KARINA PEÑA SIMANCA", "notas": ["A", "A", "A", "A", "A", "A", "A", "A", "D", "D", "D", "D", "A", "A", "A", "A", "A", "D", "A", "A", "A", "A", "A", "A", "A", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-"]},
+{"nombre": "CRISTIAN FELIPE RAMIREZ CORREA", "notas": ["A", "A", "A", "A", "A", "A", "A", "A", "A", "D", "A", "A", "A", "A", "A", "A", "-", "A", "A", "D", "A", "A", "A", "A", "A", "A", "A", "A", "A", "D", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "D", "A", "A", "A", "A", "-", "-"]},
+{"nombre": "BRAIAN RESTREPO TORRES", "notas": ["A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A"]},
+{"nombre": "OMAR JULIAN RODRIGUEZ GONZALEZ", "notas": ["A", "A", "A", "A", "A", "A", "A", "A", "A", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-"]},
+{"nombre": "LAURA ISABEL ROJAS BUSTAMANTE", "notas": ["-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-"]},
+{"nombre": "SAMUEL ORALIS ROMERO SIERRA", "notas": ["A", "A", "A", "A", "A", "A", "A", "A", "A", "D", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "-", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "D", "A"]},
+{"nombre": "SEBASTIAN RONDON MONROY", "notas": ["A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "-", "-", "-", "-", "-", "-", "A", "A", "A", "A", "A", "A", "A", "-", "-", "A", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-"]},
+{"nombre": "ESTEBAN DAVID SALINAS GARCIA", "notas": ["A", "A", "-", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "-", "A", "A", "A", "A", "D", "A", "A", "A", "-", "D", "-", "-", "A", "A", "A", "A", "A", "A", "A", "A", "D", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "D"]},
+{"nombre": "SANTIAGO SANCHEZ GUTIERREZ", "notas": ["A", "A", "A", "D", "A", "A", "A", "-", "A", "D", "-", "-", "A", "A", "A", "A", "A", "D", "D", "-", "-", "-", "A", "A", "A", "A", "A", "A", "A", "D", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "D", "A", "A", "D", "D"]},
+{"nombre": "PEDRO JOSE SEPULVEDA ESTUPIÑAN", "notas": ["-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-"]},
+{"nombre": "GERALDINE TAPIAS URQUIJO", "notas": ["-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-"]},
+{"nombre": "ANDRES GONZALO TOLEDO MARTINEZ", "notas": ["-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-"]},
+{"nombre": "KELLY JOANNA VALENCIA MARIN", "notas": ["-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-"]},
+{"nombre": "FREDDY ESTEBAN VALENCIA NARVAEZ", "notas": ["A", "A", "A", "A", "-", "A", "A", "A", "A", "A", "A", "A", "A", "A", "-", "A", "-", "D", "A", "A", "A", "A", "A", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-"]},
+{"nombre": "PAULO ALBERTO VARGAS ALDANA", "notas": ["-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-"]},
+{"nombre": "MARCOS VASQUEZ GALEANO", "notas": ["-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-"]},
+{"nombre": "JESSICA XIMENA VILLANUEVA RAMOS", "notas": ["-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-", "-"]}];
+
+/* ================= CÁLCULOS ================= */
+const aprendices = estudiantes.filter(e => e.notas.some(n => n === 'A' || n === 'D'));
+const pct = (a,b) => b ? Math.round(a*100/b) : 0;
+function stats(e, idxs) {
+  let A=0, D=0;
+  idxs.forEach(i => { if (e.notas[i]==='A') A++; else if (e.notas[i]==='D') D++; });
+  return { A, D, T: idxs.length };
+}
+const idxGuia = g => ACTIVIDADES.map((a,i)=>a.g===g?i:-1).filter(i=>i>=0);
+const idxComp = c => ACTIVIDADES.map((a,i)=>a.c===c?i:-1).filter(i=>i>=0);
+const ALL = ACTIVIDADES.map((_,i)=>i);
+function grupo(idxs) {
+  let A=0, D=0;
+  aprendices.forEach(e => { const s = stats(e, idxs); A+=s.A; D+=s.D; });
+  return { A, D, T: idxs.length * aprendices.length };
+}
+const colorPct = p => p>=90 ? 'var(--green)' : p>=70 ? 'var(--blue)' : p>=50 ? 'var(--amber)' : 'var(--red)';
+function estado(p) {
+  if (p===100) return '<span class="status st-ok">Completo</span>';
+  if (p>=80) return '<span class="status st-good">Al día</span>';
+  if (p>=50) return '<span class="status st-prog">En progreso</span>';
+  return '<span class="status st-bad">Requiere atención</span>';
+}
+const iniciales = n => { const p = n.split(' '); return (p[0][0] + (p.length>2 ? p[p.length-2][0] : (p[1]||' ')[0])).toUpperCase(); };
+const nombreBonito = n => n.toLowerCase().replace(/(^|\s)\S/g, s => s.toUpperCase());
+const badge = n => n==='A' ? '<i class="badge b-A">A</i>' : n==='D' ? '<i class="badge b-D">D</i>' : '<i class="badge b-E">—</i>';
+
+/* ================= RINGS ================= */
+function ring(el, p, color, label) {
+  const r = 50, c = 2*Math.PI*r;
+  el.innerHTML = `<svg width="118" height="118" viewBox="0 0 118 118">
+    <circle cx="59" cy="59" r="${r}" fill="none" stroke="var(--track)" stroke-width="9"/>
+    <circle cx="59" cy="59" r="${r}" fill="none" stroke="${color}" stroke-width="9" stroke-linecap="round"
+      stroke-dasharray="${c}" stroke-dashoffset="${c}" style="transition:stroke-dashoffset 1.2s cubic-bezier(.2,.8,.2,1)"/></svg>
+    <div class="lbl"><b>${p}%</b><small>${label}</small></div>`;
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{ el.querySelectorAll('circle')[1].style.strokeDashoffset = c*(1-p/100); }));
+}
+
+/* ================= RESUMEN ================= */
+function renderResumen() {
+  const g = grupo(ALL);
+  const pA = pct(g.A, g.T), pE = pct(g.A+g.D, g.T);
+  ring(document.getElementById('ringA'), pA, 'var(--green)', 'Aprobado');
+  ring(document.getElementById('ringE'), pE, 'var(--accent-2)', 'Entregado');
+  document.getElementById('kA').textContent = pA + '%';
+  document.getElementById('kAsub').innerHTML = `<b>${g.A}/${g.T}</b> evidencias aprobadas`;
+  document.getElementById('kD').textContent = g.D;
+  const full = aprendices.filter(e => stats(e, ALL).A === ALL.length).length;
+  document.getElementById('kFull').textContent = `${full}/${aprendices.length}`;
+  document.getElementById('kFullSub').textContent = 'aprendices con todas las evidencias aprobadas';
+  let low = null;
+  GUIAS.forEach(gu => { const s = grupo(idxGuia(gu.id)); const p = pct(s.A, s.T); if (!low || p < low.p) low = { p, gu }; });
+  document.getElementById('kLow').textContent = low.p + '%';
+  document.getElementById('kLowSub').innerHTML = `<b>Guía ${low.gu.id}</b> — ${low.gu.nombre}`;
+}
+
+function metricHTML(titulo, icon, A, T, color, extra) {
+  const p = pct(A, T);
+  return `<div class="metric">
+    <div class="metric-top"><span>${icon} ${titulo}</span><span class="pct" style="color:${color}">${p}%</span></div>
+    <div class="bar"><i style="width:${p}%;background:${color}"></i></div>
+    <div class="metric-bot"><span>${A}/${T} ${extra}</span><span>Pendientes: ${T-A}</span></div>
+  </div>`;
+}
+
+let filtroGuia = 0;
+function renderFiltroGuias() {
+  const f = document.getElementById('filtroGuias');
+  f.innerHTML = [`<button data-g="0" class="${filtroGuia===0?'active':''}">Todas</button>`]
+    .concat(GUIAS.map(g => `<button data-g="${g.id}" class="${filtroGuia===g.id?'active':''}">Guía ${g.id}</button>`)).join('');
+  f.querySelectorAll('button').forEach(b => b.onclick = () => { filtroGuia = +b.dataset.g; renderFiltroGuias(); renderCompGuias(); });
+}
+function renderCompGuias() {
+  const list = document.getElementById('compGuias');
+  const gs = filtroGuia ? GUIAS.filter(g => g.id === filtroGuia) : GUIAS;
+  list.innerHTML = gs.map(g => {
+    const idx = idxGuia(g.id), s = grupo(idx);
+    const codes = [...new Set(idx.map(i => ACTIVIDADES[i].c))].join(' · ');
+    let det = '';
+    if (filtroGuia) {
+      det = `<div class="act-rows">` + idx.map(i => {
+        const a = ACTIVIDADES[i];
+        const n = aprendices.filter(e => e.notas[i]==='A').length;
+        const p = pct(n, aprendices.length);
+        return `<div class="act-row" title="${a.nombre}"><div class="t"><span>${a.ev} · ${a.corto}</span><b style="color:${colorPct(p)}">${n}/${aprendices.length}</b></div><div class="bar"><i style="width:${p}%;background:${colorPct(p)}"></i></div></div>`;
+      }).join('') + `</div>`;
+    }
+    return `<div class="card comp">
+      <div class="comp-top"><span class="code">${codes}</span><span class="comp-title">Guía ${g.id} — ${g.nombre}</span><span class="guide-chip">${idx.length} evidencias</span></div>
+      <div class="comp-grid">
+        ${metricHTML('Evidencias aprobadas', '✓', s.A, s.T, 'var(--green)', 'aprobadas')}
+        ${metricHTML('Evidencias entregadas', '↑', s.A+s.D, s.T, 'var(--accent-2)', 'entregadas (A + D)')}
+      </div>${det}
+    </div>`;
+  }).join('');
+}
+
+/* ================= COMPETENCIAS ================= */
+let filtroC = 0;
+function renderCompetencias() {
+  const f = document.getElementById('filtroComp');
+  f.innerHTML = [`<button data-g="0" class="${filtroC===0?'active':''}">Todas</button>`]
+    .concat(GUIAS.map(g => `<button data-g="${g.id}" class="${filtroC===g.id?'active':''}">Guía ${g.id}</button>`)).join('');
+  f.querySelectorAll('button').forEach(b => b.onclick = () => { filtroC = +b.dataset.g; renderCompetencias(); });
+  const list = document.getElementById('compList');
+  const cs = COMPETENCIAS.filter(c => !filtroC || ACTIVIDADES.some(a => a.c===c.code && a.g===filtroC));
+  list.innerHTML = cs.map(c => {
+    const idx = idxComp(c.code).filter(i => !filtroC || ACTIVIDADES[i].g === filtroC);
+    const s = grupo(idx);
+    const completos = aprendices.filter(e => stats(e, idx).A === idx.length).length;
+    return `<div class="card comp">
+      <div class="comp-top"><span class="code">${c.code}</span><span class="comp-title">${c.nombre}</span><span class="guide-chip">${filtroC ? 'Guía '+filtroC : c.guias}</span></div>
+      <div class="comp-grid">
+        ${metricHTML('Evidencias aprobadas', '✓', s.A, s.T, 'var(--green)', 'aprobadas')}
+        ${metricHTML('Aprendices al 100%', '★', completos, aprendices.length, 'var(--accent)', 'aprendices')}
+      </div>
+    </div>`;
+  }).join('') || '<div class="card empty">Sin competencias para este filtro.</div>';
+}
+
+/* ================= APRENDICES ================= */
+function renderAprendices(q='') {
+  const tb = document.querySelector('#tablaAprendices tbody');
+  const lista = aprendices.filter(e => e.nombre.toLowerCase().includes(q.toLowerCase()));
+  tb.innerHTML = lista.map(e => {
+    const s = stats(e, ALL), pA = pct(s.A, s.T), pE = pct(s.A+s.D, s.T);
+    const mini = GUIAS.map(g => { const sg = stats(e, idxGuia(g.id)); const p = pct(sg.A, sg.T);
+      return `<i title="Guía ${g.id}: ${p}%" style="--w:${p}%;--c:${g.color}"></i>`; }).join('');
+    const n = aprendices.indexOf(e) + 1;
+    return `<tr data-i="${n-1}">
+      <td class="pct-cell" style="color:var(--dim)">${n}</td>
+      <td><div class="who"><span class="avatar">${iniciales(e.nombre)}</span>${nombreBonito(e.nombre)}</div></td>
+      <td><div class="mini">${mini}</div></td>
+      <td class="pct-cell" style="color:${colorPct(pA)}">${pA}%</td>
+      <td class="pct-cell" style="color:var(--dim)">${pE}%</td>
+      <td class="pct-cell" style="color:${s.D?'var(--amber)':'var(--dimmer)'}">${s.D}</td>
+      <td>${estado(pA)}</td></tr>`;
+  }).join('') || '<tr><td colspan="7" class="empty">No se encontró ningún aprendiz.</td></tr>';
+  tb.querySelectorAll('tr[data-i]').forEach(tr => tr.onclick = () => abrirExpediente(aprendices[+tr.dataset.i]));
+}
+
+function abrirExpediente(e) {
+  const s = stats(e, ALL);
+  const bloques = GUIAS.map(g => {
+    const idx = idxGuia(g.id), sg = stats(e, idx), p = pct(sg.A, sg.T);
+    const items = idx.map(i => { const a = ACTIVIDADES[i];
+      return `<div class="act-item"><span class="code">${a.c}-${a.ev}</span><span class="nm">${a.nombre}</span>${badge(e.notas[i])}</div>`; }).join('');
+    return `<details class="guide-block" ${p<100?'open':''}>
+      <summary><span class="gdot" style="background:${g.color}"></span>Guía ${g.id} — ${g.nombre}
+        <span class="bar"><i style="width:${p}%;background:${g.color}"></i></span>
+        <span class="pct-cell" style="color:${colorPct(p)}">${p}%</span></summary>
+      <div class="act-list">${items}</div></details>`;
+  }).join('');
+  document.getElementById('modal').innerHTML = `
+    <div class="modal-head"><span class="avatar">${iniciales(e.nombre)}</span>
+      <div><h3>${nombreBonito(e.nombre)}</h3><p>Expediente individual · Guías 1 a 5 · ${estado(pct(s.A, s.T))}</p></div>
+      <button class="close" onclick="cerrarModal()" aria-label="Cerrar">✕</button></div>
+    <div class="modal-kpis">
+      <div><small>Aprobadas (A)</small><b style="color:var(--green)">${s.A}/${s.T}</b></div>
+      <div><small>En desarrollo (D)</small><b style="color:var(--amber)">${s.D}</b></div>
+      <div><small>Sin entregar</small><b style="color:var(--red)">${s.T - s.A - s.D}</b></div>
+    </div>${bloques}`;
+  document.getElementById('modalBg').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function cerrarModal() { document.getElementById('modalBg').classList.remove('open'); document.body.style.overflow = ''; }
+document.getElementById('modalBg').onclick = ev => { if (ev.target.id === 'modalBg') cerrarModal(); };
+document.addEventListener('keydown', ev => { if (ev.key === 'Escape') cerrarModal(); });
+
+/* ================= MATRIZ ================= */
+function renderMatriz(q='') {
+  const th = document.querySelector('#tablaMatriz thead');
+  th.innerHTML = `<tr><th rowspan="2">Aprendiz</th>` +
+    GUIAS.map(g => `<th colspan="${idxGuia(g.id).length}" class="g${g.id}h">Guía ${g.id} — ${g.nombre}</th>`).join('') +
+    `</tr><tr>` + ACTIVIDADES.map(a => `<th class="act-h" title="${a.nombre}">${a.ev}<br>${a.corto}</th>`).join('') + `</tr>`;
+  const lista = aprendices.filter(e => e.nombre.toLowerCase().includes(q.toLowerCase()));
+  document.querySelector('#tablaMatriz tbody').innerHTML = lista.map(e =>
+    `<tr><td><b>${nombreBonito(e.nombre)}</b></td>${e.notas.map(badge).map(b=>`<td>${b}</td>`).join('')}</tr>`).join('')
+    || `<tr><td colspan="${ACTIVIDADES.length+1}" class="empty">No se encontró ningún aprendiz.</td></tr>`;
+}
+
+/* ================= NAV / TEMA ================= */
+document.querySelectorAll('.nav button').forEach(b => b.onclick = () => {
+  document.querySelectorAll('.nav button').forEach(x => x.classList.remove('active'));
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  b.classList.add('active');
+  document.getElementById('view-' + b.dataset.view).classList.add('active');
+  if (b.dataset.view === 'resumen') renderResumen();
+  window.scrollTo({ top:0 });
+});
+function setTheme(t) {
+  document.documentElement.setAttribute('data-theme', t);
+  document.getElementById('btnDark').classList.toggle('on', t==='dark');
+  document.getElementById('btnLight').classList.toggle('on', t==='light');
+  try { localStorage.setItem('tema-adso', t); } catch(_) {}
+}
+document.getElementById('btnDark').onclick = () => setTheme('dark');
+document.getElementById('btnLight').onclick = () => setTheme('light');
+try { const t = localStorage.getItem('tema-adso'); if (t) setTheme(t); } catch(_) {}
+
+document.getElementById('buscador').oninput = ev => renderAprendices(ev.target.value);
+document.getElementById('buscadorMatriz').oninput = ev => renderMatriz(ev.target.value);
+
+document.getElementById('cntComp').textContent = COMPETENCIAS.length;
+document.getElementById('cntApr').textContent = aprendices.length;
+document.getElementById('cntAct').textContent = ACTIVIDADES.length;
+document.getElementById('nApr').textContent = aprendices.length;
+
+renderResumen(); renderFiltroGuias(); renderCompGuias(); renderCompetencias(); renderAprendices(); renderMatriz();
+</script>
+</body>
+</html>
